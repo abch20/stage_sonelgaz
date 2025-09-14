@@ -6,6 +6,7 @@ dotenv.config();
 const GEOSERVER_URL = process.env.GEOSERVER_URL || 'http://localhost:8000/geoserver';
 
 const renderMap = async (req, res) => {
+    //todo make layer name dynamic
     try {
         const response = await axios.get(`${GEOSERVER_URL}/wms`, {
             params: {
@@ -32,10 +33,10 @@ const renderMap = async (req, res) => {
     }
 };
 
+// todo: make typeName dynamic
 const renderFeatures = async (req, res) => {
   try {
     const url = GEOSERVER_URL + "/stage/ows";
-
     const response = await axios.get(url, {
       params: {
         service: "WFS",
@@ -65,6 +66,13 @@ const renderFeatures = async (req, res) => {
   }
 };
 
+const drawing = async (req, res) => {
+    //todo make layer name dynamic
+    try {
+       
+    } catch (error) {
 
+    }
+};
 
 export { renderMap, renderFeatures };
