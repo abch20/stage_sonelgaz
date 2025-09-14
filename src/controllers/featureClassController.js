@@ -4,6 +4,7 @@ import axios from 'axios';
 dotenv.config();
 
 const GEOSERVER_URL = process.env.GEOSERVER_URL || 'http://localhost:8000/geoserver';
+
 const renderMap = async (req, res) => {
     try {
         const response = await axios.get(`${GEOSERVER_URL}/wms`, {
@@ -30,23 +31,40 @@ const renderMap = async (req, res) => {
         res.status(500).send('Error rendering map');
     }
 };
+
 const renderFeatures = async (req, res) => {
   try {
-    const url =
-      "http://localhost:8000/geoserver/stage/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=stage:communes_algerie&outputFormat=application/json&srsName=EPSG:4326";
+    const url = GEOSERVER_URL + "/stage/ows";
 
     const response = await axios.get(url, {
+      params: {
+        service: "WFS",
+        version: "1.0.0",
+        request: "GetFeature",
+        typeName: "stage:communes_algerie",
+        outputFormat: "application/json",
+        srsName: "EPSG:4326",
+      },
       responseType: "json",
       maxRedirects: 0,
     });
 
-    res.set("Content-Type", "application/json");
-    res.send(response.data);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).json(response.data);
   } catch (error) {
-    console.error("Error fetching communes:", error.response?.data || error.message);
-    res.status(500).send("Error fetching communes");
+    console.error(
+      "Error fetching communes:",
+      error.response?.data || error.message
+    );
+
+    res.status(500).json({
+      success: false,
+      message: "Error fetching communes",
+      error: error.message,
+    });
   }
 };
+
 
 
 export { renderMap, renderFeatures };
