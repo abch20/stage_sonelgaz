@@ -2,6 +2,7 @@ import express, {json} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './src/routes/authRoutes.js';
+import featureClassRoutes from './src/routes/featureClassRoutes.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(json());
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/featureClass', featureClassRoutes);
 
 
 
