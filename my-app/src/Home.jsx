@@ -1,26 +1,38 @@
-// src/App.jsx or src/pages/Home.jsx
+// src/pages/Home.jsx
 import "leaflet/dist/leaflet.css";
-import { HelpCircle, Home as HomeIcon, Settings } from "lucide-react"; // example icons
+import { HelpCircle, Home as HomeIcon, Settings } from "lucide-react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Sidebar, { SidebarItem } from "./components/Sidebar";
 
 export default function Home() {
+  const location = useLocation();
+
+  const navItems = [
+    { path: "/index", label: "Dashboard", icon: <HomeIcon size={20} /> },
+    { path: "/setting", label: "Settings", icon: <Settings size={20} /> },
+    {
+      path: "/help",
+      label: "Help",
+      icon: <HelpCircle size={20} />,
+      alert: true,
+    },
+  ];
+
   return (
     <div className="h-screen w-screen flex overflow-hidden">
       {/* Sidebar */}
       <Sidebar>
-        <Link to="/index">
-          <SidebarItem icon={<HomeIcon size={20} />} text="Dashboard"  active />
-        </Link>
-
-        <Link to="/Setting">
-          <SidebarItem icon={<Settings size={20} />} text="Settings" />
-        </Link>
-
-        <Link to="/Help">
-          <SidebarItem icon={<HelpCircle size={20} />} text="Help" alert />
-        </Link>
+        {navItems.map(({ path, label, icon, alert }) => (
+          <Link key={path} to={path}>
+            <SidebarItem
+              icon={icon}
+              text={label}
+              active={location.pathname === path}
+              alert={alert}
+            />
+          </Link>
+        ))}
       </Sidebar>
 
       {/* Main Content (Map) */}
